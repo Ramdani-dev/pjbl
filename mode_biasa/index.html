@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <base href="/mode_biasa/">
+    <title>Sistem Mode Biasa - SUIT GAME SUPREME</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="bg-layer">
+        <div class="bg-gradient"></div>
+        <div class="bg-grid"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <!-- KUNCI ORIENTASI -->
+    <div id="lock-screen">
+        <div class="phone-icon">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect x="30" y="10" width="40" height="70" rx="6" ry="6" stroke-width="2.5"/>
+                <circle cx="50" cy="72" r="3"/>
+                <line x1="42" y1="16" x2="58" y2="16" stroke-width="2" stroke-linecap="round"/>
+                <path d="M 78 50 A 30 30 0 0 1 50 80" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <polygon points="50,75 50,85 42,80" fill="currentColor" stroke="none"/>
+                <path d="M 22 40 A 30 30 0 0 1 50 10" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <polygon points="50,5 50,15 58,10" fill="currentColor" stroke="none"/>
+            </svg>
+        </div>
+        <h2 class="lock-title">SILAKAN MIRINGKAN HANDPHONE ANDA UNTUK MEMULAI GAME SUPREME</h2>
+        <p class="lock-sub">Game ini memerlukan tampilan landscape yang imersif.</p>
+    </div>
+
+    <!-- ARENA BIASA -->
+    <div id="screen-normal" class="screen screen-active" style="opacity: 1; pointer-events: all;">
+        <div class="layout-wrapper">
+            
+            <div class="top-header">
+                <div class="header-title">MODE BIASA</div>
+                <div class="score-board">
+                    <div>
+                        <span class="score-num" id="score-player">0</span>
+                        <span class="score-label">KAMU</span>
+                    </div>
+                    <span class="text-vs">VS</span>
+                    <div>
+                        <span class="score-num" id="score-system">0</span>
+                        <span class="score-label">SISTEM</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-arena">
+                
+                <div class="choice-col">
+                    <div class="choice-card" data-pilihan="rock" id="choose-rock">
+                        <div class="choice-icon">✊</div>
+                        <div>
+                            <div class="choice-name">BATU</div>
+                            <div class="choice-sub">KODE — ▓▓▓</div>
+                        </div>
+                    </div>
+                    <div class="choice-card" data-pilihan="scissors" id="choose-scissors">
+                        <div class="choice-icon">✌️</div>
+                        <div>
+                            <div class="choice-name">GUNTING</div>
+                            <div class="choice-sub">KODE — ◈◈◈</div>
+                        </div>
+                    </div>
+                    <div class="choice-card" data-pilihan="paper" id="choose-paper">
+                        <div class="choice-icon">✋</div>
+                        <div>
+                            <div class="choice-name">KERTAS</div>
+                            <div class="choice-sub">KODE — ░░░</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="center-panel">
+                    <div>
+                        <div class="display-box" id="display-player">—</div>
+                        <div class="bottom-label text-mono">KAMU</div>
+                    </div>
+                    <div class="vs-badge">VS</div>
+                    <div>
+                        <div class="display-box" id="display-opponent">❓</div>
+                        <div class="bottom-label text-mono">SISTEM</div>
+                    </div>
+                    <div class="result-area">
+                        <div class="result-text" id="final-result"></div>
+                    </div>
+                </div>
+
+                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem">
+                    <div class="stats-col">
+                        <div class="stat-item text-mono">MENANG <span id="stat-win" style="color:var(--color-green-accent)">0</span></div>
+                        <div class="stat-item text-mono">KALAH <span id="stat-lose" style="color:var(--color-red-accent)">0</span></div>
+                        <div class="stat-item text-mono">SERI <span id="stat-draw" style="color:var(--color-cyan)">0</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-controls">
+                <button class="button button-ghost" id="back-menu">← KEMBALI</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

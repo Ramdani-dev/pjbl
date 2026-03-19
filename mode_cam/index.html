@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <base href="/mode_cam/">
+    <title>Mode Kamera - SUIT GAME SUPREME</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="bg-layer">
+        <div class="bg-gradient"></div>
+        <div class="bg-grid"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <!-- KUNCI ORIENTASI -->
+    <div id="lock-screen">
+        <div class="phone-icon">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect x="30" y="10" width="40" height="70" rx="6" ry="6" stroke-width="2.5"/>
+                <circle cx="50" cy="72" r="3"/>
+                <line x1="42" y1="16" x2="58" y2="16" stroke-width="2" stroke-linecap="round"/>
+                <path d="M 78 50 A 30 30 0 0 1 50 80" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <polygon points="50,75 50,85 42,80" fill="currentColor" stroke="none"/>
+                <path d="M 22 40 A 30 30 0 0 1 50 10" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <polygon points="50,5 50,15 58,10" fill="currentColor" stroke="none"/>
+            </svg>
+        </div>
+        <h2 class="lock-title">SILAKAN MIRINGKAN HANDPHONE ANDA UNTUK MEMULAI GAME SUPREME</h2>
+        <p class="lock-sub">Game ini memerlukan tampilan landscape yang imersif.</p>
+    </div>
+
+    <!-- ARENA KAMERA -->
+    <div id="camera-screen" class="screen screen-active">
+        <div class="layout-wrapper">
+            
+            <div class="cam-left">
+                <div class="cam-container" id="camera-feed-container">
+                    <video autoplay playsinline muted id="videoEl"></video>
+                    <canvas id="canvasEl"></canvas>
+                    <div class="sys-icon">
+                        <span class="dot"></span>
+                        DETEKSI AKTIF
+                    </div>
+                </div>
+            </div>
+
+            <div class="cam-right">
+                
+                <div class="score-box">
+                    <div class="section-label">SKOR</div>
+                    <div class="main-score">
+                        <div><span class="score-num" id="score-player">0</span><span class="player-name">KAMU</span></div>
+                        <span class="text-vs">VS</span>
+                        <div><span class="score-num" id="score-system">0</span><span class="player-name">SISTEM</span></div>
+                    </div>
+                </div>
+
+                <div class="status-box">
+                    <div class="text-status" id="textInfo">SIAP, KELUARKAN TANGANMU</div>
+                </div>
+
+                <div class="accuracy-box">
+                    <div class="section-label">AKURASI</div>
+                    <div class="energy-bar bar-rock">
+                        <span class="bar-label text-mono">BATU</span>
+                        <div class="bar-track"><div class="bar-fill" id="barRock" style="width:0%"></div></div>
+                        <span class="bar-val text-mono" id="valRock">0%</span>
+                    </div>
+                    <div class="energy-bar bar-scissors">
+                        <span class="bar-label text-mono">GUNTING</span>
+                        <div class="bar-track"><div class="bar-fill" id="barScissors" style="width:0%"></div></div>
+                        <span class="bar-val text-mono" id="valScissors">0%</span>
+                    </div>
+                    <div class="energy-bar bar-paper">
+                        <span class="bar-label text-mono">KERTAS</span>
+                        <div class="bar-track"><div class="bar-fill" id="barPaper" style="width:0%"></div></div>
+                        <span class="bar-val text-mono" id="valPaper">0%</span>
+                    </div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-title text-mono">PILIHANMU</div>
+                        <div class="stat-val" id="displayUser"><span style="image-rendering:pixelated">▪</span>—</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-title text-mono">SISTEM</div>
+                        <div class="stat-val" id="displayCom"><span style="image-rendering:pixelated">▪</span>—</div>
+                    </div>
+                </div>
+
+                <div class="sys-choices">
+                    <div class="choice-icon" id="sys-icon-rock">✊</div>
+                    <div class="choice-icon" id="sys-icon-scissors">✌️</div>
+                    <div class="choice-icon" id="sys-icon-paper">✋</div>
+                </div>
+
+                <div class="result-banner" id="resultBanner" style="display:none">
+                    <div class="result-title" id="resultTitleEl">Hasil</div>
+                    <div class="result-sub" id="resultSubEl"></div>
+                </div>
+
+                <div class="button-container">
+                    <button class="button button-cyan" id="buttonOpenCamera">▶ BUKA KAMERA</button>
+                    <button class="button button-danger" id="buttonCloseCamera" disabled>■ TUTUP KAMERA</button>
+                    <button class="button button-ghost" id="buttonBack">← KEMBALI</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    
+    <!-- Script Sistem -->
+    <script src="js/webcam.js"></script>
+    <script src="js/handDetector.js"></script>
+    <script src="js/model.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+</html>
