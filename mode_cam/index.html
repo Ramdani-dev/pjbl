@@ -8,21 +8,36 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <base href="/mode_cam/">
     <title>Mode Kamera - SUIT GAME SUPREME</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+            colors: {
+              primary: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a5f' },
+            },
+          },
+        },
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="bg-gray-50 text-slate-800 font-sans w-screen h-screen overflow-hidden antialiased">
 
-    <div class="bg-layer">
-        <div class="bg-gradient"></div>
-        <div class="bg-grid"></div>
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
+    <!-- Subtle Background -->
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-sky-50"></div>
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-200/25 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-200/20 rounded-full blur-[120px]"></div>
     </div>
 
-    <!-- KUNCI ORIENTASI -->
-    <div id="lock-screen">
-        <div class="phone-icon">
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- Orientation Lock -->
+    <div id="lock-screen" class="hidden fixed inset-0 z-[9999] bg-white/95 backdrop-blur-xl flex-col items-center justify-center gap-6 p-8 text-center">
+        <div class="w-20 h-20 animate-rotate-phone">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="w-full h-full stroke-primary-600 fill-none stroke-[1.5]">
                 <rect x="30" y="10" width="40" height="70" rx="6" ry="6" stroke-width="2.5"/>
                 <circle cx="50" cy="72" r="3"/>
                 <line x1="42" y1="16" x2="58" y2="16" stroke-width="2" stroke-linecap="round"/>
@@ -32,87 +47,114 @@
                 <polygon points="50,5 50,15 58,10" fill="currentColor" stroke="none"/>
             </svg>
         </div>
-        <h2 class="lock-title">SILAKAN MIRINGKAN HANDPHONE ANDA UNTUK MEMULAI GAME SUPREME</h2>
-        <p class="lock-sub">Game ini memerlukan tampilan landscape yang imersif.</p>
+        <h2 class="font-bold text-base text-slate-800 max-w-xs">Silakan Miringkan Handphone Anda</h2>
+        <p class="text-sm text-slate-500 max-w-xs">Game ini memerlukan tampilan landscape.</p>
     </div>
 
-    <!-- ARENA KAMERA -->
-    <div id="camera-screen" class="screen screen-active">
-        <div class="layout-wrapper">
-            
-            <div class="cam-left">
-                <div class="cam-container" id="camera-feed-container">
-                    <video autoplay playsinline muted id="videoEl"></video>
-                    <canvas id="canvasEl"></canvas>
-                    <div class="sys-icon">
-                        <span class="dot"></span>
-                        DETEKSI AKTIF
+    <!-- ===== CAMERA MODE ===== -->
+    <div id="camera-screen" class="screen screen-active" style="opacity:1;pointer-events:all;">
+        <div class="cam-layout w-full h-full grid grid-cols-1 lg:grid-cols-[3fr_2fr] z-10">
+
+            <!-- LEFT: Camera Feed -->
+            <div class="relative flex items-center justify-center p-4 sm:p-8 bg-white/40 backdrop-blur-sm border-r border-gray-200/50">
+                <div class="cam-container relative w-full aspect-video rounded-2xl border-2 border-dashed border-blue-200 overflow-hidden shadow-lg bg-slate-900">
+                    <video autoplay playsinline muted id="videoEl" class="absolute inset-0 w-full h-full object-cover scale-x-[-1]"></video>
+                    <canvas id="canvasEl" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+                    <!-- Detection Badge -->
+                    <div class="absolute top-3 right-3 z-10 flex items-center gap-2 px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-lg border border-gray-200 text-xs text-primary-700 font-medium shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)] animate-blink"></span>
+                        Deteksi Aktif
                     </div>
                 </div>
             </div>
 
-            <div class="cam-right">
-                
-                <div class="score-box">
-                    <div class="section-label">SKOR</div>
-                    <div class="main-score">
-                        <div><span class="score-num" id="score-player">0</span><span class="player-name">KAMU</span></div>
-                        <span class="text-vs">VS</span>
-                        <div><span class="score-num" id="score-system">0</span><span class="player-name">SISTEM</span></div>
+            <!-- RIGHT: Controls Panel -->
+            <div class="flex flex-col gap-4 p-5 sm:p-7 bg-white/70 backdrop-blur-md overflow-y-auto">
+
+                <!-- Score -->
+                <div class="mb-1">
+                    <div class="text-xs font-bold text-primary-600 uppercase tracking-widest mb-3">Skor</div>
+                    <div class="flex items-center gap-5">
+                        <div>
+                            <span class="font-extrabold text-3xl text-slate-800 leading-none" id="score-player">0</span>
+                            <span class="text-[0.6rem] text-slate-500 block font-medium mt-1">KAMU</span>
+                        </div>
+                        <span class="text-xs font-bold text-primary-400">VS</span>
+                        <div>
+                            <span class="font-extrabold text-3xl text-slate-800 leading-none" id="score-system">0</span>
+                            <span class="text-[0.6rem] text-slate-500 block font-medium mt-1">SISTEM</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="status-box">
-                    <div class="text-status" id="textInfo">SIAP, KELUARKAN TANGANMU</div>
+                <!-- Status -->
+                <div class="mb-1 p-3 bg-white/60 border-2 border-dashed border-blue-200 rounded-xl">
+                    <div class="font-semibold text-sm text-slate-700 min-h-[1.5em]" id="textInfo">Siap, keluarkan tanganmu 👋</div>
                 </div>
 
-                <div class="accuracy-box">
-                    <div class="section-label">AKURASI</div>
-                    <div class="energy-bar bar-rock">
-                        <span class="bar-label text-mono">BATU</span>
-                        <div class="bar-track"><div class="bar-fill" id="barRock" style="width:0%"></div></div>
-                        <span class="bar-val text-mono" id="valRock">0%</span>
+                <!-- Accuracy Bars (JokoUI Gradient Progress - blue version) -->
+                <div class="space-y-2.5 mb-1 p-4 bg-white/60 border-2 border-dashed border-blue-200 rounded-xl">
+                    <div class="text-xs font-bold text-primary-600 uppercase tracking-widest mb-2">Akurasi</div>
+                    <!-- Rock -->
+                    <div class="grid grid-cols-[60px_1fr_40px] items-center gap-3">
+                        <span class="text-xs text-slate-500 text-right font-medium">Batu</span>
+                        <div class="bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                            <div class="bg-gradient-to-r from-rose-400 to-rose-500 h-full rounded-full transition-all duration-300" id="barRock" style="width:0%"></div>
+                        </div>
+                        <span class="text-xs text-slate-600 text-right font-semibold" id="valRock">0%</span>
                     </div>
-                    <div class="energy-bar bar-scissors">
-                        <span class="bar-label text-mono">GUNTING</span>
-                        <div class="bar-track"><div class="bar-fill" id="barScissors" style="width:0%"></div></div>
-                        <span class="bar-val text-mono" id="valScissors">0%</span>
+                    <!-- Scissors -->
+                    <div class="grid grid-cols-[60px_1fr_40px] items-center gap-3">
+                        <span class="text-xs text-slate-500 text-right font-medium">Gunting</span>
+                        <div class="bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                            <div class="bg-gradient-to-r from-amber-400 to-amber-500 h-full rounded-full transition-all duration-300" id="barScissors" style="width:0%"></div>
+                        </div>
+                        <span class="text-xs text-slate-600 text-right font-semibold" id="valScissors">0%</span>
                     </div>
-                    <div class="energy-bar bar-paper">
-                        <span class="bar-label text-mono">KERTAS</span>
-                        <div class="bar-track"><div class="bar-fill" id="barPaper" style="width:0%"></div></div>
-                        <span class="bar-val text-mono" id="valPaper">0%</span>
-                    </div>
-                </div>
-
-                <div class="stats-row">
-                    <div class="stat-item">
-                        <div class="stat-title text-mono">PILIHANMU</div>
-                        <div class="stat-val" id="displayUser"><span style="image-rendering:pixelated">▪</span>—</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-title text-mono">SISTEM</div>
-                        <div class="stat-val" id="displayCom"><span style="image-rendering:pixelated">▪</span>—</div>
+                    <!-- Paper -->
+                    <div class="grid grid-cols-[60px_1fr_40px] items-center gap-3">
+                        <span class="text-xs text-slate-500 text-right font-medium">Kertas</span>
+                        <div class="bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                            <div class="bg-gradient-to-r from-blue-400 to-blue-500 h-full rounded-full transition-all duration-300" id="barPaper" style="width:0%"></div>
+                        </div>
+                        <span class="text-xs text-slate-600 text-right font-semibold" id="valPaper">0%</span>
                     </div>
                 </div>
 
-                <div class="sys-choices">
-                    <div class="choice-icon" id="sys-icon-rock">✊</div>
-                    <div class="choice-icon" id="sys-icon-scissors">✌️</div>
-                    <div class="choice-icon" id="sys-icon-paper">✋</div>
+                <!-- Choice Display -->
+                <div class="grid grid-cols-2 gap-3 mb-1">
+                    <div class="p-3.5 bg-white/80 backdrop-blur-sm border-2 border-dashed border-blue-200 rounded-xl shadow-sm">
+                        <div class="text-[0.6rem] text-slate-400 font-medium uppercase tracking-wider mb-1.5">Pilihanmu</div>
+                        <div class="font-bold text-sm text-slate-700" id="displayUser">—</div>
+                    </div>
+                    <div class="p-3.5 bg-white/80 backdrop-blur-sm border-2 border-dashed border-blue-200 rounded-xl shadow-sm">
+                        <div class="text-[0.6rem] text-slate-400 font-medium uppercase tracking-wider mb-1.5">Sistem</div>
+                        <div class="font-bold text-sm text-slate-700" id="displayCom">—</div>
+                    </div>
                 </div>
 
-                <div class="result-banner" id="resultBanner" style="display:none">
-                    <div class="result-title" id="resultTitleEl">Hasil</div>
-                    <div class="result-sub" id="resultSubEl"></div>
+                <!-- System Choice Icons -->
+                <div class="flex gap-2 mb-1">
+                    <div class="choice-icon w-11 h-11 flex items-center justify-center text-lg bg-white/80 border-2 border-dashed border-blue-200 rounded-xl opacity-40 transition-all duration-300 shadow-sm" id="sys-icon-rock">✊</div>
+                    <div class="choice-icon w-11 h-11 flex items-center justify-center text-lg bg-white/80 border-2 border-dashed border-blue-200 rounded-xl opacity-40 transition-all duration-300 shadow-sm" id="sys-icon-scissors">✌️</div>
+                    <div class="choice-icon w-11 h-11 flex items-center justify-center text-lg bg-white/80 border-2 border-dashed border-blue-200 rounded-xl opacity-40 transition-all duration-300 shadow-sm" id="sys-icon-paper">✋</div>
                 </div>
 
-                <div class="button-container">
-                    <button class="button button-cyan" id="buttonOpenCamera">▶ BUKA KAMERA</button>
-                    <button class="button button-danger" id="buttonCloseCamera" disabled>■ TUTUP KAMERA</button>
-                    <button class="button button-ghost" id="buttonBack">← KEMBALI</button>
+                <!-- Result Banner -->
+                <div class="p-4 bg-gradient-to-r from-primary-50 to-sky-50 border-2 border-primary-200 rounded-xl text-center mb-1" id="resultBanner" style="display:none">
+                    <div class="result-title font-extrabold text-lg tracking-wide" id="resultTitleEl">Hasil</div>
+                    <div class="text-sm text-slate-500 mt-1.5" id="resultSubEl"></div>
                 </div>
 
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap gap-3 mt-auto">
+                    <!-- Primary: Gradient Button (JokoUI style - blue) -->
+                    <button class="px-6 py-3 bg-gradient-to-r from-blue-600 via-blue-500 to-sky-500 text-white font-semibold text-sm rounded-xl shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200" id="buttonOpenCamera">▶ Buka Kamera</button>
+                    <!-- Danger -->
+                    <button class="px-5 py-2.5 bg-rose-50 border border-rose-200 text-rose-600 font-semibold text-sm rounded-xl hover:bg-rose-100 focus:outline-none focus:ring-2 focus:ring-rose-500/30 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed" id="buttonCloseCamera" disabled>■ Tutup Kamera</button>
+                    <!-- Ghost/Glass -->
+                    <button class="px-5 py-2.5 bg-white/80 backdrop-blur-sm border border-gray-200 text-slate-600 font-medium text-sm rounded-xl hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500/30 transition-all duration-200" id="buttonBack">← Kembali</button>
+                </div>
             </div>
         </div>
     </div>

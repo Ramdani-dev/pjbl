@@ -9,15 +9,24 @@ def home():
     return send_from_directory('.', 'index.html')
 
 @app.route('/kamera')
-def kamera():
+def camera_mode():
     """Serve the Camera Hand-Detection Mode."""
     return send_from_directory('mode_cam', 'index.html')
 
 @app.route('/suit')
-def suit():
+def normal_mode():
     """Serve the Normal Mode."""
     return send_from_directory('mode_biasa', 'index.html')
 
+@app.route('/kamera-ai')
+def camera_ai_mode():
+    """Serve the Camera Mode with AI (LSTM prediction)."""
+    return send_from_directory('mode_ai/ai_cam', 'index.html')
+
+@app.route('/suit-ai')
+def normal_ai_mode():
+    """Serve the Normal Mode with AI (LSTM prediction)."""
+    return send_from_directory('mode_ai/ai_biasa', 'index.html')
+
 if __name__ == '__main__':
-    print("Membuka server Flask di http://localhost:3000")
     app.run(debug=True, port=3000)

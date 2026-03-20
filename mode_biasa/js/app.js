@@ -19,8 +19,8 @@
     return { status: 'kalah', pesan: 'KAMU KALAH!' };
   }
 
-  const skorPemainEl = document.getElementById('score-player');
-  const SKOR_LAWAN = document.getElementById('score-system');
+  const playerScoreEl = document.getElementById('score-player');
+  const systemScoreEl = document.getElementById('score-system');
   const DISPLAY_PLAYER = document.getElementById('display-player');
   const DISPLAY_OPPONENT = document.getElementById('display-opponent');
   const RESULT_TEXT = document.getElementById('final-result');
@@ -38,8 +38,8 @@
   let drawCount = 0;
 
   function updateScore() {
-    if (skorPemainEl) skorPemainEl.textContent = userScore;
-    if (SKOR_LAWAN) SKOR_LAWAN.textContent = comScore;
+    if (playerScoreEl) playerScoreEl.textContent = userScore;
+    if (systemScoreEl) systemScoreEl.textContent = comScore;
   }
 
   function updateStats() {
@@ -56,7 +56,7 @@
 
   CHOICE_CARDS.forEach(function (card) {
     card.addEventListener('click', function () {
-      let userChoice = card.getAttribute('data-pilihan');
+      let userChoice = card.getAttribute('data-choice');
       let comChoice = randomChoice();
 
       clearChoices();
@@ -78,7 +78,7 @@
           let matchResult = determineWinner(userChoice, comChoice);
 
           if (RESULT_TEXT) {
-            RESULT_TEXT.className = 'result-text';
+            RESULT_TEXT.className = 'result-text font-display font-extrabold text-sm sm:text-base tracking-wider';
             RESULT_TEXT.textContent = matchResult.pesan;
 
             if (matchResult.status === 'menang') {
@@ -104,7 +104,7 @@
 
   if (buttonBack) {
     buttonBack.addEventListener('click', function () {
-      window.location.href = '../index.html#menu';
+      window.location.href = '/#menu';
     });
   }
 
